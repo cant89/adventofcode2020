@@ -58,7 +58,7 @@ async function run() {
   const res1 = getPartOne(passports);
   const res2 = getPartTwo(passports);
 
-  console.log(res2);
+  console.log(res1, res2);
 }
 
 run();
