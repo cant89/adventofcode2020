@@ -1,21 +1,16 @@
 const { importData } = require("../utils");
 
 function getContained(rules, type) {
-  const regex = new RegExp(`(.*) bags contain.*[0-9] ${type}`, "gm");
-  const match = rules.match(regex);
-
-  if (match) {
-    return match
-      .map((rule) => {
-        const [adj, color] = rule.split(" ");
-        const biggerBag = `${adj} ${color}`;
-        const containsBiggerBag = getContained(rules, biggerBag);
-        return [biggerBag, ...containsBiggerBag];
-      })
-      .flat();
-  }
-
-  return [];
+  return rules.reduce((acc, rule) => {
+    const regex = new RegExp(`contain.*${type}`, "gm");
+    const match = rule.match(regex);
+    if (match) {
+      const [, biggerBag] = /(.*)\sbags contain/gm.exec(rule);
+      const containsBiggerBag = getContained(rules, biggerBag);
+      return [...acc, biggerBag, ...containsBiggerBag];
+    }
+    return acc;
+  }, []);
 }
 
 function getContain(rules, type) {
@@ -38,8 +33,9 @@ function getContain(rules, type) {
 }
 
 function getPartOne(rules) {
-  const containsShinyGold = getContained(rules, "shiny gold");
-  const uniq = [...new Set(containsShinyGold)];
+  const rulesArr = rules.split(/\n/gm);
+  const containsShinyGold = getContained(rulesArr, "shiny gold");
+  const uniq = [...new Set([containsShinyGold].flat(2))];
 
   return uniq.length;
 }
