@@ -59,9 +59,10 @@ function stepWithFix({ i, ins, acc, history, fixHistory, trying }) {
 
   const isInFixFixHistory = fixHistory.filter(({ i: index }) => index === i)
     .length;
-
   const hasToTry = !isInFixFixHistory && !trying;
-  const defaultArgs = {
+
+  return stepWithFix({
+    i: i + ((op === "nop") ^ hasToTry ? 1 : Number(amount)),
     ins,
     acc,
     history: [...history, i],
@@ -79,21 +80,7 @@ function stepWithFix({ i, ins, acc, history, fixHistory, trying }) {
         : []),
     ],
     trying: trying || hasToTry,
-  };
-
-  if (op === "nop") {
-    return stepWithFix({
-      i: i + (!hasToTry ? 1 : Number(amount)),
-      ...defaultArgs,
-    });
-  }
-
-  if (op === "jmp") {
-    return stepWithFix({
-      i: i + (!hasToTry ? Number(amount) : 1),
-      ...defaultArgs,
-    });
-  }
+  });
 }
 
 function getPartOne(ins) {
