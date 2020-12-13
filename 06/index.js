@@ -1,12 +1,10 @@
 const { importData } = require("../utils");
 
 function getPartOne(answers) {
-  return answers.reduce((unique, group) => {
-    const yes = Object.keys(
-      group.split("").reduce((obj, key) => ({ ...obj, [key]: true }), {})
-    );
-    return unique + yes.length;
-  }, 0);
+  return answers.reduce(
+    (unique, group) => unique + [...new Set(group.split(""))].length,
+    0
+  );
 }
 
 function getUniqueAnswersInGroup(group) {

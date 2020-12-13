@@ -7,26 +7,15 @@ function step({ i, ins, acc, history }) {
     return acc;
   }
 
-  history.push(i);
   const [op, amount] = ins[i].split(" ");
+  const isAcc = op === "acc";
 
-  if (op === "acc") {
-    return step({ i: i + 1, ins, acc: acc + Number(amount), history });
-  }
-
-  const defaultArgs = {
+  return step({
+    i: i + Number(op === "nop" || isAcc || amount),
     ins,
-    acc,
-    history,
-  };
-
-  if (op === "nop") {
-    return step({ i: i + 1, ...defaultArgs });
-  }
-
-  if (op === "jmp") {
-    return step({ i: i + Number(amount), ...defaultArgs });
-  }
+    acc: isAcc ? acc + Number(amount) : acc,
+    history: [...history, i],
+  });
 }
 
 function stepWithFix({ i, ins, acc, history, fixHistory, trying }) {
