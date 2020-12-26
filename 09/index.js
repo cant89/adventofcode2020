@@ -24,7 +24,7 @@ function searchContiguous(invalidNum, nums) {
     );
 
     if (index) {
-      const contiguous = nums.slice(i, index + 1).map((n) => Number(n));
+      const contiguous = nums.slice(i, index + 1).map(Number);
       return Math.min(...contiguous) + Math.max(...contiguous);
     }
 
